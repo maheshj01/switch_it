@@ -1,6 +1,9 @@
 # switch_it
 
-A new Flutter package project.
+A customised Switch Widget in Flutter !
+
+![image](https://user-images.githubusercontent.com/31410839/81827093-0d3c4080-9556-11ea-8cf7-e0c59c822c38.png)
+
 
 ## Getting Started
 
