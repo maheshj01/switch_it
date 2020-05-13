@@ -1,16 +1,29 @@
 # switch_it
 
-A customised Switch Widget in Flutter !
+A Package for a customised Switch Widget in Flutter !
 
 ![image](https://user-images.githubusercontent.com/31410839/81827093-0d3c4080-9556-11ea-8cf7-e0c59c822c38.png)
 
+## Installation
+Include the package in Pubspec.yaml
 
+```switch_it: ^0.0.1 ```
+
+## Usage
+
+```
+SwitchIt(
+    isEnabled: isEnabled1,
+    onChanged: (value) {
+        setState(() {
+         isEnabled = !isEnabled;
+        });
+    },
+),
+```
+
+For more [refer the example app](https://github.com/maheshmnj/switch_it/tree/master/example)
 ## Getting Started
-
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
 
 For help getting started with Flutter, view our 
 [online documentation](https://flutter.dev/docs), which offers tutorials, 

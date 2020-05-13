@@ -2,17 +2,22 @@ library switch_it;
 
 /// A Calculator.
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
-class CustomSwitch extends StatefulWidget {
+class SwitchIt extends StatefulWidget {
   /// Color for the toggle circle when the switch is on
   final Color activeColor;
 
-  // Color for the toggle circle when the switch is off
+  /// Color for the toggle circle when the switch is off
   final Color inActiveColor;
+
+  /// background Color of the Switch
+  final Color backgroundColor;
 
   /// The call back returning the status of the switch
   final Function(bool) onChanged;
+
+  /// Text Color for the status of the switch
+  final Color color;
 
   /// The current Status of the switch,defaults to false if not specified
   bool isEnabled;
@@ -23,43 +28,33 @@ class CustomSwitch extends StatefulWidget {
   /// The child to show instead of the circle
   final EdgeInsetsGeometry padding;
 
-  final Icon child;
-
-  CustomSwitch(
+  SwitchIt(
       {Key key,
-      this.activeColor = Colors.green,
+      this.activeColor,
       this.onChanged,
       this.isEnabled = false,
-      this.inActiveColor = Colors.grey,
+      this.inActiveColor,
       this.padding,
-      this.child,
+      this.color,
+      this.backgroundColor = Colors.white,
       this.size = 60.0})
       : assert(size >= 40.0),
         super(key: key);
 
   @override
-  _CustomSwitchState createState() => _CustomSwitchState();
+  _SwitchItState createState() => _SwitchItState();
 }
 
-class _CustomSwitchState extends State<CustomSwitch>
-    with TickerProviderStateMixin {
+class _SwitchItState extends State<SwitchIt> with TickerProviderStateMixin {
   Widget _circleWidget() {
     return Container(
       width: _circleRadius(widget.size),
       height: _circleRadius(widget.size),
       decoration: BoxDecoration(
-          color: widget.isEnabled ? widget.activeColor : widget.inActiveColor,
+          color: widget.isEnabled
+              ? widget.activeColor ?? Colors.green
+              : widget.inActiveColor ?? Colors.grey,
           borderRadius: BorderRadius.circular(_circleRadius(widget.size))),
-      // child: child(),
-    );
-  }
-
-  Widget child() {
-    return Container(
-      child: Icon(
-        Icons.desktop_mac,
-        size: _iconSize(widget.size),
-      ),
     );
   }
 
@@ -77,30 +72,6 @@ class _CustomSwitchState extends State<CustomSwitch>
   MainAxisAlignment _mainAxisAlignment;
   double _dragStart;
   double _dragEnd;
-  Animation<double> _animation;
-  AnimationController _animationController;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-    _animation = Tween<double>(
-      begin: 0,
-      end: _circleRadius(widget.size),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeIn,
-    ));
-    _animationController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        // print('completed');
-      }
-    });
-    // _controller.forward();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,31 +85,22 @@ class _CustomSwitchState extends State<CustomSwitch>
       onHorizontalDragEnd: (details) {
         double difference = _dragEnd - _dragStart;
 
-        /// if drag is > 33% then toggle the switch
         if (difference.abs() > widget.size / 3.0) {
-          widget.isEnabled = !widget.isEnabled;
           if (!widget.isEnabled) {
-            _animationController.forward();
-            setState(() {
-              _mainAxisAlignment = MainAxisAlignment.start;
-            });
+            _mainAxisAlignment = MainAxisAlignment.start;
           } else {
-            _animationController.reverse();
-            setState(() {
-              _mainAxisAlignment = MainAxisAlignment.end;
-            });
+            _mainAxisAlignment = MainAxisAlignment.end;
           }
-          widget.onChanged(widget.isEnabled);
+          if (widget.onChanged != null) widget.onChanged(widget.isEnabled);
         }
       },
-      //(x/d-1)*2*pi;
       child: Container(
           width: widget.size,
           height: widget.size / 2.0,
           padding: widget.padding ??
               EdgeInsets.symmetric(vertical: 2, horizontal: 3),
           decoration: BoxDecoration(
-              color: Colors.white,
+              color: widget.backgroundColor ?? Colors.white,
               borderRadius: BorderRadius.circular(widget.size / 3)),
           child: Stack(
             fit: StackFit.expand,
@@ -156,7 +118,9 @@ class _CustomSwitchState extends State<CustomSwitch>
                           horizontal: _hPadding(widget.size)),
                       child: Text(
                         'On',
-                        style: TextStyle(fontSize: _fontSize(widget.size)),
+                        style: TextStyle(
+                            color: widget.color,
+                            fontSize: _fontSize(widget.size)),
                       ),
                     )
                   : Container(
@@ -165,7 +129,9 @@ class _CustomSwitchState extends State<CustomSwitch>
                           horizontal: _hPadding(widget.size)),
                       child: Text(
                         'Off',
-                        style: TextStyle(fontSize: _fontSize(widget.size)),
+                        style: TextStyle(
+                            color: widget.color,
+                            fontSize: _fontSize(widget.size)),
                       ),
                     )
             ],
