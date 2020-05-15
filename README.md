@@ -13,7 +13,7 @@ Include the package in Pubspec.yaml
 
 ```
 SwitchIt(
-    isEnabled: isEnabled1,
+    isEnabled: isEnabled,
     onChanged: (value) {
         setState(() {
          isEnabled = !isEnabled;
